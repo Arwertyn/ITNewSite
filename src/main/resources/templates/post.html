@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>Создать пост</title>
+    <meta property="og:image" content="path/to/image.jpg">
+    <link rel="icon" href="../img/favicon/favicon.ico" >
+    <link rel="apple-touch-icon" sizes="180x180" href="../img/favicon/apple-touch-icon-180x180.png">
+    <meta name="theme-color" content="#202222">
+    <link rel="stylesheet"  href="../css/main.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+</head>
+<script th:inline="javascript">
+    let readOnly = [[${!owner}]];
+    let json = [[${post.getNode()}]];
+    let idPost = [[${post.getId()}]];
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/link@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/warning@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+
+
+<body class="ishome">
+
+<header class="top-line">
+
+    <div>
+        <a href="/" class="logo logo-litera">IT News</a>
+
+    </div>
+
+    <div class="search-wrap">
+        <div class="search" title="Поиск по сайту...">
+            <div class="fa fa-search"></div>
+        </div>
+        <div class="search-field">
+            <form action="/search.html" id="cse-search-box">
+                <input type="hidden" name="cx" value="partner-pub-xxx:xxx"/>
+                <input type="hidden" name="cof" value="FORID:10"/>
+                <input type="hidden" name="ie" value="UTF-8"/>
+                <input type="text" name="q" placeholder="Поиск по сайту..."/>
+            </form>
+        </div>
+    </div>
+
+    <div class="mobile-menu-button"><i class="fa fa-bars"></i> Меню</div>
+    <nav class="main-menu top-menu">
+        <div class="d-flex mx-2 justify-content-between align-items-center">
+            <div class="d-flex">
+                <a href="/allPosts">Все посты</a>
+                <a href="/myPosts">Мои посты</a>
+                <a href="/createPost">Создать пост</a>
+            </div>
+            <div>
+                <div th:if="${#authentication.getName().equals('anonymousUser')}" class="d-flex align-items-center">
+                    <a href="/login">Sign in</a>
+                </div>
+                <div th:unless="${#authentication.getName().equals('anonymousUser')}" class="d-flex align-items-center">
+                    <span style="color: #d1d9e0" th:text="${#authentication.getName()}"></span>
+                    <a href="/logout">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+</header>
+
+<section class="first-section clearfix">
+    <div th:unless="${post.published || owner}"><h1 style="height: 400px" class="text-center">Пост не опубликован.</h1></div>
+    <div th:if="${post.published || owner}" class="container-fluid">
+        <div th:if="${!owner}" class="d-flex justify-content-between">
+            <span class="text-center" th:text="${post.getName()}"></span>
+            <b><span class="text-center" th:text="'Автор: '+${post.getUser().getUsername()}"></span></b>
+        </div>
+        <div th:if="${owner}" class="d-flex justify-content-left">
+            <div class="border border-dark p-2">
+                <h2>Редактировать превью и заголовок поста</h2>
+                    <form id="update-head-form" th:action="@{../api/post/updateHeaders}" method="post" enctype="multipart/form-data" onsubmit="updateHead(event)">
+                        <input type="hidden" name="postId" th:value="${post.getId()}">
+                        <div class="mb-3">
+                            <label for="postName" class="form-label"><h4>Введите название поста</h4></label>
+                            <input type="text" minlength="6" class="form-control" id="postName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label"><h4>Загрузите превью поста (jpeg,png,jpg....)</h4></label>
+                            <input class="form-control" type="file" id="formFile" accept="image/*" name="preview" required>
+                        </div>
+                        <div id="alert" class="alert" role="alert"></div>
+                        <button type="submit" id="saveButton" class="btn btn-dark w-100">Обновить</button>
+                    </form>
+                </div>
+                <div class="w-100 mx-2">
+                    <div class="border border-dark p-2">
+                        <h2>Опубликовать пост</h2>
+                        <div>
+                            <span>Статус поста: </span>
+                            <div id="status-pub" class="d-flex">
+                                <span th:if="${post.published == true}" style="color: lawngreen">Опубликовано</span>
+                                <span th:unless="${post.published == true}" style="color: red">Не опубликовано</span>
+                            </div>
+                        </div>
+                        <form th:action="@{../api/post/publish}" method="post" id="publish-form" onsubmit="publish(event)">
+                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                <input type="radio" class="btn-check" name="bool" id="btnradio1" autocomplete="off" value="true" checked>
+                                <label class="btn btn-outline-dark" for="btnradio1">Опубликовать</label>
+
+                                <input type="radio" class="btn-check" name="bool" id="btnradio2" value="false" autocomplete="off">
+                                <label class="btn btn-outline-dark" for="btnradio2">Снять с публикации</label>
+                            </div>
+                            <input type="hidden" name="postId" th:value="${post.getId()}">
+                            <button class="btn btn-dark w-100 mt-2" type="submit">Подтвердить</button>
+                        </form>
+                    </div>
+
+                    <div class="border border-dark p-2 mt-2">
+                        <h2>Удалить пост</h2>
+                        <div>
+                            <form id="delete-form" th:action="@{../api/post/removePost}" method="post">
+                                <input type="hidden" name="id" th:value="${post.getId()}">
+                                <button class="btn btn-danger w-100" type="button" onclick="deletePost()">Удалить пост</button>
+                            </form>
+                            <dialog id="dialog">
+                                <h2 class="text-center">Вы точно хотите удалить пост<br>Это действие не обратимо</h2>
+                                <div class="mt-2">
+                                    <button class="btn btn-dark" id="cancelBtn" value="cancel" formmethod="dialog">Отмена</button>
+                                    <button class="btn btn-dark mx-2" id="confirmBtn" value="default">Удалить</button>
+                                </div>
+                            </dialog>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="border border-dark p-2 mt-1">
+                <div id="editorjs"></div>
+                <form th:action="@{../api/post/addPostBody}" method="post" id="form-post-body">
+                <div th:if="${owner}">
+                        <input type="hidden" name="id" th:value="${post.getId()}">
+                        <input type="hidden" name="json" value="0">
+                        <button class="btn btn-dark w-100" id="saveBody" type="button" onclick="saveBodyForm()">Сохранить тело поста</button>
+                </div>
+                </form>
+            </div>
+            <h2>Комментарии:</h2>
+            <div class="border border-dark p-2 mt-1">
+                <div class="mb-3">
+                    <form id="comment-form" th:action="@{../api/post/addComment}" method="post" onsubmit="addComment(event)">
+                        <label for="comment" class="form-label">Ваш лучший коммент:</label>
+                        <div class="d-flex">
+                            <input type="hidden" name="postId" th:value="${post.getId()}">
+                            <input type="text" minlength="5" maxlength="255" class="form-control" id="comment" name="comment" required>
+                            <button class="btn btn-dark" type="submit">Отправить</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="border border-dark p-2">
+                    <h3 id="h3-msg" th:if="${post.commentList.isEmpty()}">Список комментариев пуст. Напишите первый комментарий :3</h3>
+                    <div id="comment-list">
+                        <div class="border border-dark rounded-3 d-flex">
+                            <div class="bg-dark text-white">Author</div>
+                            <div>Message</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+
+<footer class="main-footer">
+    <div class="contaiter">
+
+        <nav class="main-menu footer-menu">
+            <ul>
+                <li class="active"><a href="#">Электроника</a></li>
+                <li><a href="#">Новости IT</a></li>
+                <li><a href="#">Обзоры</a></li>
+                <li><a href="#">Лайфхаки</a></li>
+                <li><a href="#">DIY</a></li>
+                <li><a href="#">О сайте</a></li>
+            </ul>
+        </nav>
+
+        <nav class="soc">
+            <ul>
+                <li><a href="#"><i class="fa fa-vk"></i></a></li>
+                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa fa-odnoklassniki"></i></a></li>
+                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fa fa-rss"></i></a></li>
+            </ul>
+        </nav>
+
+    </div>
+</footer>
+<footer class="bottom-footer">
+    <div class="container text-center">
+        <div class="footer-copy"><span class="logo-footer logo-litera"></span></div>
+    </div>
+</footer>
+
+<script src="../js/scripts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+<script src="../js/createPostJs.js"></script>
+<script src="../js/createPostBody.js"></script>
+</body>
+</html>

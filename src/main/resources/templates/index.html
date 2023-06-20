@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <base href="/">
+
+    <title>IT News</title>
+    <meta name="description"
+          content="Новости электроники, технологий, современных гаджетов, и другая актуальная информация современной IT индустрии">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Template Basic Images Start -->
+    <meta property="og:image" content="path/to/image.jpg">
+    <link rel="icon" href="img/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon-180x180.png">
+    <!-- Template Basic Images End -->
+
+    <!-- Custom Browsers Color Start -->
+    <meta name="theme-color" content="#202222">
+    <!-- Custom Browsers Color End -->
+
+    <link rel="stylesheet" href="css/main.min.css">
+
+</head>
+
+<body class="ishome">
+
+<header class="top-line">
+
+    <div>
+        <a href="/" class="logo logo-litera">IT News</a>
+
+    </div>
+
+    <div class="search-wrap">
+        <div class="search" title="Поиск по сайту...">
+            <div class="fa fa-search"></div>
+        </div>
+        <div class="search-field">
+            <form action="/search.html" id="cse-search-box">
+                <input type="hidden" name="cx" value="partner-pub-xxx:xxx"/>
+                <input type="hidden" name="cof" value="FORID:10"/>
+                <input type="hidden" name="ie" value="UTF-8"/>
+                <input type="text" name="q" placeholder="Поиск по сайту..."/>
+            </form>
+        </div>
+    </div>
+
+    <div class="mobile-menu-button"><i class="fa fa-bars"></i> Меню</div>
+    <nav class="main-menu top-menu">
+        <div class="d-flex mx-2 justify-content-between align-items-center">
+            <div class="d-flex">
+                <a href="/allPosts">Все посты</a>
+                <a href="/myPosts">Мои посты</a>
+                <a href="/createPost">Создать пост</a>
+            </div>
+            <div>
+                <div th:if="${#authentication.getName().equals('anonymousUser')}" class="d-flex align-items-center">
+                    <a href="/login">Sign in</a>
+                </div>
+                <div th:unless="${#authentication.getName().equals('anonymousUser')}" class="d-flex align-items-center">
+                    <span style="color: #d1d9e0" th:text="${#authentication.getName()}"></span>
+                    <a href="/logout">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+</header>
+
+<section class="first-section clearfix">
+    <div class="container-fluid">
+
+        <div class="row no-gutters g-0">
+
+            <div th:each="post:${posts}" class="col-md-4">
+                <div class="pattern">
+                    <img class="overlay item-title"
+                         th:src="'data:image/jpeg; base64,'+${imageUtil.getImgData(post.getPreview())}" width="400"
+                         height="250">
+                    <div class="item-title-content" style="backdrop-filter: blur(2px); mix-blend-mode: difference;">
+
+                        <h3><a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.getName()}"></a></h3>
+
+                        <div class="item-social">
+                            <div class="item-comments" title="Количество комментариев">
+                                <i class="fa fa-comments"></i><a th:text="${post.getCommentList().size()}"
+                                                                 class="item-comments-count">26</a>
+                            </div>
+                            <div class="fa fa-share-alt" title="Поделиться в соц. сетях"></div>
+                            <div class="likely likely-custom" data-url="path" data-media="img/blog/electronics/1.jpg"
+                                 data-title="Новые смартфоны покорили поклонников мобильной индустрии">
+                                <div class="vkontakte" title="Поделиться Вконтакте">Вконтакте</div>
+                                <div class="facebook" title="Поделиться в Facebook">Facebook</div>
+                                <div class="twitter" title="Поделиться в Twitter">Twitter</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    </img>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</section>
+
+
+<section class="s_more text-center">
+    <div class="container">
+        <a href="../allPosts" class="button">Показать еще</a>
+    </div>
+</section>
+
+<footer class="main-footer">
+    <div class="contaiter">
+
+        <nav class="main-menu footer-menu">
+            <ul>
+                <li class="active"><a href="#">Электроника</a></li>
+                <li><a href="#">Новости IT</a></li>
+                <li><a href="#">Обзоры</a></li>
+                <li><a href="#">Лайфхаки</a></li>
+                <li><a href="#">DIY</a></li>
+                <li><a href="#">О сайте</a></li>
+            </ul>
+        </nav>
+
+        <nav class="soc">
+            <ul>
+                <li><a href="#"><i class="fa fa-vk"></i></a></li>
+                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa fa-odnoklassniki"></i></a></li>
+                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fa fa-rss"></i></a></li>
+            </ul>
+        </nav>
+
+    </div>
+</footer>
+<footer class="bottom-footer">
+    <div class="container text-center">
+        <div class="footer-copy">2023 © <span class="logo-footer logo-litera">GeekTOP.ru</span></div>
+        <p>Копирование контента и размещение на других сайтах запрещено.</p>
+    </div>
+</footer>
+
+<script src="js/scripts.min.js"></script>
+
+</body>
+</html>
