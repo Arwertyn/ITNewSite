@@ -1,4 +1,4 @@
-# ITNewSite
+![image](https://github.com/Arwertyn/ITNewSite/assets/107973423/0629724d-ba9f-4a41-ad62-f474692f9374)# ITNewSite
 
 *sudo apt update && sudo apt upgrade*
 
@@ -12,7 +12,20 @@ GIT:  **sudo apt install git**
 **Шаг 1** Выполнить комманды<br/>
 **$ wget https://mirrors.estointernet.in/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz**<br/>
 **$ tar -xvf apache-maven-3.6.3-bin.tar.gz**<br/>
-**$ mv apache-maven-3.6.3 /opt/ ** <br/>
+**$ mv apache-maven-3.6.3 /opt/** <br/>
+
+**Шаг 2:** Установка пути maven
+Введите следующие строки в профиль пользоватьля. **/root/.profile** (.profile).
+
+**M2_HOME='/opt/apache-maven-3.6.3'
+PATH="$M2_HOME/bin:$PATH"
+export PATH**
+Вызовите  **source /root/.profile**
+
+**Шаг 3:** Проверка установки
+Введите **mvn -version**. Должна поивиться информация об установленной версии Maven 
+
+
 
 Создайте папку mkdir /var/<Название_Папки><br/>
 
@@ -26,13 +39,4 @@ GIT:  **sudo apt install git**
 
 
 
-Step 2: Setting M2_HOME and Path Variables
-Add the following lines to the user profile file (.profile).
 
-M2_HOME='/opt/apache-maven-3.6.3'
-PATH="$M2_HOME/bin:$PATH"
-export PATH
-Relaunch the terminal or execute source .profile to apply the changes.
-
-Step 3: Verify the Maven installation
-Execute mvn -version command and it should produce the following output.
