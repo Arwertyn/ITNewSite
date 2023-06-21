@@ -1,4 +1,4 @@
-![image](https://github.com/Arwertyn/ITNewSite/assets/107973423/0629724d-ba9f-4a41-ad62-f474692f9374)# ITNewSite
+# ITNewSite
 
 *sudo apt update && sudo apt upgrade*
 
