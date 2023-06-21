@@ -8,7 +8,7 @@ Maven: **sudo apt install maven**<br/>
 MySQL: **sudo apt install mysql-server**<br/>
 GIT:  **sudo apt install git**
 
-
+Создайте папку mkdir /var/<Название_Папки><br/>
 
 # Создать файл application.properties
 В папке **src/main/resources/** найти файл application-properties.example. Содержимое файла скопировать в созданный в этом каталоге application.properties<br/>
