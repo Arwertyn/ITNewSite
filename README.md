@@ -6,6 +6,9 @@
 Java 17:  **sudo apt install openjdk-17-jdk**<br/>
 Maven: **sudo apt install maven**<br/>
 MySQL: **sudo apt install mysql-server**<br/>
+GIT:  **sudo apt install git**
+
+
 
 # Создать файл application.properties
 В папке **src/main/resources/** найти файл application-properties.example. Содержимое файла скопировать в созданный в этом каталоге application.properties<br/>
